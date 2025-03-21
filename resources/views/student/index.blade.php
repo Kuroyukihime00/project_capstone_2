@@ -71,7 +71,7 @@
                               title="Edit Student"
                               class="btn btn-link btn-primary edit-data"
                               data-original-title="Edit Student"
-                              data-url="{{ route('student-update', [$student->nrp]) }}"
+                              data-url="{{ route('student-edit', [$student->nrp]) }}"
                           >
                             <i class="fa fa-edit"></i>
                           </button>
@@ -131,13 +131,15 @@
         }
       })
     })
-    @error('err_msg')
+  </script>
+  @error('err_msg')
+  <script>
     $.notify({
       message: "{{ $message }}"
     }, {
       type: "danger",
       delay: 4000,
     })
-    @enderror
   </script>
+  @enderror
 @endsection
