@@ -24,6 +24,7 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'role_id',
     ];
 
     /**
@@ -52,4 +53,8 @@ class User extends Authenticatable
     protected $primaryKey = 'nip';
 
     public $incrementing = false;
+
+    public function role() {
+        return $this->belongsTo(Role::class);
+    }
 }
