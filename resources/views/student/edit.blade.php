@@ -20,7 +20,7 @@
         <div class="col-md-12">
           <div class="card">
             <div class="card-body">
-              <form method="post" action="{{ route('student-update', [$student->nrp]) }}">
+              <form method="post" action="{{ route('student-update', [$student->nrp]) }}" enctype="multipart/form-data">
                 @csrf
                 @method('PUT')
                 <div class="form-group">
@@ -66,6 +66,16 @@
                   @enderror
                 </div>
                 <div class="form-group">
+                  <label for="profile_picture">Student Photo</label>
+                  <input type="file" name="profile_picture" id="profile_picture" accept="image/png,image/jpg,image/jpeg" class="form-control">
+                  @if($student->profile_picture != null)
+                    <a href="{{ asset('storage/students_picture/' . $student->profile_picture) }}" target="_blank" role="button" class="btn btn-warning">Show Profile Picture</a>
+                  @endif
+                  @error('profile_picture')
+                  <div class="alert alert-danger">{{ $message }}</div>
+                  @enderror
+                </div>
+                <div class="form-group">
                   <label for="lecturer_nik">Academic Supervisor</label>
                   <select name="lecturer_nik" id="lecturer_nik" class="form-control" required>
                     <option value="">-- Choose Academic Supervisor --</option>
@@ -82,7 +92,7 @@
                   @enderror
                 </div>
                 <div class="form-group">
-                  <button type="submit" class="btn btn-primary">Save</button>
+                  <button type="submit" class="btn btn-primary">Update</button>
                 </div>
               </form>
             </div>

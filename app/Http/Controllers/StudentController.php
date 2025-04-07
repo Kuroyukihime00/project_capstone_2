@@ -40,8 +40,15 @@ class StudentController extends Controller
       'email' => ['nullable', 'email', 'max:50', 'unique:student,email'],
       'address' => ['required', 'string', 'max:300'],
       'lecturer_nik' => ['required', 'string'],
+      'profile_picture' => ['nullable', 'image', 'mimes:jpeg,png,jpg', 'max:2048'],
     ]);
     $student = new Student($validatedData);
+    if ($request->hasFile('profile_picture')) {
+      $file = $request->file('profile_picture');
+      $newFileName = $validatedData['nrp'] . '.' . $file->getClientOriginalExtension();
+      $file->storePubliclyAs('students_picture', $newFileName);
+      $student['profile_picture'] = $newFileName;
+    }
     $student->save();
     return redirect()->route('student-list')
       ->with('status', 'Student successfully added!');
@@ -91,6 +98,7 @@ class StudentController extends Controller
       'email' => ['nullable', 'email', 'max:50', Rule::unique('student', 'email')->ignore($student->nrp, 'nrp')],
       'address' => ['required', 'string', 'max:300'],
       'lecturer_nik' => ['required', 'string'],
+      'profile_picture' => ['nullable', 'image', 'mimes:jpeg,png,jpg', 'max:2048'],
     ]);
     $student['name'] = $validatedData['name'];
     $student['birth_date'] = $validatedData['birth_date'];
@@ -98,6 +106,13 @@ class StudentController extends Controller
     $student['email'] = $validatedData['email'];
     $student['address'] = $validatedData['address'];
     $student['lecturer_nik'] = $validatedData['lecturer_nik'];
+    if ($request->hasFile('profile_picture')) {
+      unlink('storage/students_picture/' . $student->profile_picture);
+      $file = $request->file('profile_picture');
+      $newFileName = $validatedData['nrp'] . '.' . $file->getClientOriginalExtension();
+      $file->storePubliclyAs('students_picture', $newFileName);
+      $student['profile_picture'] = $newFileName;
+    }
     $student->save();
     return redirect()->route('student-list')
       ->with('status', 'Student successfully updated!');
@@ -111,6 +126,9 @@ class StudentController extends Controller
     $student = Student::find($nrp);
     if ($student == null) {
       return back()->withErrors(['err_msg' => 'Student not found!']);
+    }
+    if ($student->profile_picture != null) {
+      unlink('storage/students_picture/' . $student->profile_picture);
     }
     $student->delete();
     return redirect()->route('student-list')

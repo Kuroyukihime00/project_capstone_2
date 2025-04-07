@@ -17,7 +17,7 @@
         <div class="col-md-12">
           <div class="card">
             <div class="card-body">
-              <form method="post" action="{{ route('student-store') }}">
+              <form method="post" action="{{ route('student-store') }}" enctype="multipart/form-data">
                 @csrf
                 <div class="form-group">
                   <label for="nrp">NRP</label>
@@ -58,6 +58,13 @@
                   <label for="address">Address</label>
                   <textarea name="address" id="address" maxlength="300" placeholder="e.g. Some street #1" rows="4" class="form-control" required>{{ old('address') }}</textarea>
                   @error('address')
+                  <div class="alert alert-danger">{{ $message }}</div>
+                  @enderror
+                </div>
+                <div class="form-group">
+                  <label for="profile_picture">Student Photo</label>
+                  <input type="file" name="profile_picture" id="profile_picture" accept="image/png,image/jpg,image/jpeg" class="form-control">
+                  @error('profile_picture')
                   <div class="alert alert-danger">{{ $message }}</div>
                   @enderror
                 </div>

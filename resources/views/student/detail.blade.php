@@ -23,7 +23,11 @@
               <div class="col-md-4 d-flex align-items-center justify-content-center">
                 <div class="text-center">
                   <div class="avatar avatar-xxl">
+                    @if($student->profile_picture != null)
+                    <img src="{{ asset('/storage/students_picture/' . $student->profile_picture ) }}" alt="..." class="avatar-img rounded-circle">
+                    @else
                     <img src="{{ asset('assets/img/examples/example1.jpeg') }}" alt="..." class="avatar-img rounded-circle">
+                    @endif
                   </div>
                   <h3>{{ $student->nrp }}</h3>
                   <p><b>{{ $student->name }}</b></p>
