@@ -6,7 +6,8 @@ use Illuminate\Database\Eloquent\Model;
 
 class Role extends Model
 {
-    protected $table = 'role';
-
-    protected $fillable = ['name'];
+    public const ADMIN = 'admin';
+    public const MAHASISWA = 'mahasiswa';
+    public const KAPRODI = 'kaprodi';
+    public const MANAJER = 'manajer';
 }

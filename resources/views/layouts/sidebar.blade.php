@@ -1,90 +1,83 @@
-<!-- Sidebar -->
-<div class="sidebar" data-background-color="dark">
-  <div class="sidebar-logo">
-    <!-- Logo Header -->
-    <div class="logo-header" data-background-color="dark">
-      <a href="#" class="logo">
-        <img
-            src="{{ asset('assets/img/kaiadmin/logo_light.svg') }}"
-            alt="navbar brand"
-            class="navbar-brand"
-            height="20"
-        />
-      </a>
-      <div class="nav-toggle">
-        <button class="btn btn-toggle toggle-sidebar">
-          <i class="gg-menu-right"></i>
-        </button>
-        <button class="btn btn-toggle sidenav-toggler">
-          <i class="gg-menu-left"></i>
-        </button>
-      </div>
-      <button class="topbar-toggler more">
-        <i class="gg-more-vertical-alt"></i>
-      </button>
-    </div>
-    <!-- End Logo Header -->
-  </div>
-  <div class="sidebar-wrapper scrollbar scrollbar-inner">
-    <div class="sidebar-content">
-      <ul class="nav nav-secondary">
-        <li class="nav-item active">
-          <a data-bs-toggle="collapse" href="#dashboard" class="collapsed" aria-expanded="false">
-            <i class="fas fa-home"></i>
-            <p>Dashboard</p>
-          </a>
-        </li>
+@php
+    $role = auth()->user()->role->name ?? '';
+    $currentRoute = Route::currentRouteName();
+    $pendingCount = \App\Models\LetterRequest::where('status', 'pending')->count();
+@endphp
+
+<aside class="sidebar bg-dark text-white p-3" style="min-height: 100vh; width: 220px; float: left;">
+    <h4 class="text-white">KaiAdmin</h4>
+    <ul class="nav flex-column mt-4">
+        {{-- Dashboard --}}
         <li class="nav-item">
-          <a data-bs-toggle="collapse" href="#base">
-            <i class="fas fa-layer-group"></i>
-            <p>Master</p>
-            <span class="caret"></span>
-          </a>
-          <div class="collapse" id="base">
-            <ul class="nav nav-collapse">
-              @if(Auth::user()->role_id == 1)
-              <li>
-                <a href="{{ route('employee-list') }}">
-                  <span class="sub-item">Employee</span>
-                </a>
-              </li>
-              @endif
-              <li>
-                <a href="{{ route('lecturer-list') }}">
-                  <span class="sub-item">Lecturer</span>
-                </a>
-              </li>
-              <li>
-                <a href="{{ route('student-list') }}">
-                  <span class="sub-item">Student</span>
-                </a>
-              </li>
-            </ul>
-          </div>
+            <a class="nav-link text-white {{ $currentRoute === 'dashboard' ? 'fw-bold' : '' }}" href="{{ route('dashboard') }}">
+                <i class="fa fa-home me-2"></i> Dashboard
+            </a>
         </li>
+
+        {{-- Profil --}}
         <li class="nav-item">
-          <a data-bs-toggle="collapse" href="#tables">
-            <i class="fas fa-table"></i>
-            <p>Other Menu</p>
-            <span class="caret"></span>
-          </a>
-          <div class="collapse" id="tables">
-            <ul class="nav nav-collapse">
-              <li>
-                <a href="#">
-                  <span class="sub-item">Other Menu 1</span>
-                </a>
-              </li>
-              <li>
-                <a href="#">
-                  <span class="sub-item">Other Menu 2</span>
-                </a>
-              </li>
-            </ul>
-          </div>
+            <a class="nav-link text-white {{ $currentRoute === 'profile.edit' ? 'fw-bold' : '' }}" href="{{ route('profile.edit') }}">
+                <i class="fa fa-user me-2"></i> Profil
+            </a>
         </li>
-      </ul>
-    </div>
-  </div>
-</div>
-<!-- End Sidebar -->
+
+        {{-- Role Admin --}}
+        @if($role === 'admin')
+            <li class="nav-item">
+                <a class="nav-link text-white {{ str_contains($currentRoute, 'employee') ? 'fw-bold' : '' }}" href="{{ route('admin.employee.index') }}">
+                    <i class="fa fa-users me-2"></i> Employee
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link text-white {{ str_contains($currentRoute, 'lecturer') ? 'fw-bold' : '' }}" href="{{ route('admin.lecturer.index') }}">
+                    <i class="fa fa-chalkboard-teacher me-2"></i> Lecturer
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link text-white {{ str_contains($currentRoute, 'student') ? 'fw-bold' : '' }}" href="{{ route('admin.student.index') }}">
+                    <i class="fa fa-graduation-cap me-2"></i> Student
+                </a>
+            </li>
+        @endif
+
+        {{-- Role Mahasiswa --}}
+        @if($role === 'mahasiswa')
+            <li class="nav-item">
+                <a class="nav-link text-white {{ str_contains($currentRoute, 'letter-requests') ? 'fw-bold' : '' }}" href="{{ route('student.letter-requests.index') }}">
+                    <i class="fa fa-envelope me-2"></i> Pengajuan Surat
+                </a>
+            </li>
+        @endif
+
+        {{-- Role Kaprodi --}}
+        @if($role === 'kaprodi')
+            <li class="nav-item">
+                <a class="nav-link text-white {{ request()->routeIs('approvals.*') ? 'active' : '' }}" href="{{ route('approvals.index') }}">
+                    <i class="fa fa-check-square"></i> Persetujuan Surat
+                    @if ($pendingCount > 0)
+                        <span class="badge bg-danger">{{ $pendingCount }}</span>
+                    @endif
+                </a>
+            </li>
+        @endif
+
+        {{-- Role Manajer --}}
+        @if($role === 'manajer')
+            <li class="nav-item">
+                <a class="nav-link text-white {{ str_contains($currentRoute, 'uploads') ? 'fw-bold' : '' }}" href="{{ route('uploads.index') }}">
+                    <i class="fa fa-upload me-2"></i> Upload Surat
+                </a>
+            </li>
+        @endif
+
+        {{-- Logout --}}
+        <li class="nav-item mt-3">
+            <form method="POST" action="{{ route('logout') }}">
+                @csrf
+                <button class="nav-link btn btn-link text-white">
+                    <i class="fa fa-sign-out-alt me-2"></i> Logout
+                </button>
+            </form>
+        </li>
+    </ul>
+</aside>

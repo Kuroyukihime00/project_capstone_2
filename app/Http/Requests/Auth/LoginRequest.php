@@ -31,27 +31,25 @@ class LoginRequest extends FormRequest
             'password' => ['required', 'string'],
         ];
     }
-
-    /**
-     * Attempt to authenticate the request's credentials.
-     *
-     * @throws \Illuminate\Validation\ValidationException
-     */
+    
     public function authenticate(): void
     {
         $this->ensureIsNotRateLimited();
-
+    
+        // DEBUG: tampilkan input yang dikirim
+        // dd($this->only('nip', 'password'));
+    
         if (! Auth::attempt($this->only('nip', 'password'), $this->boolean('remember'))) {
             RateLimiter::hit($this->throttleKey());
-
+    
             throw ValidationException::withMessages([
-                'nip' => trans('auth.failed'),
+                'email' => trans('auth.failed'),
             ]);
         }
-
+    
         RateLimiter::clear($this->throttleKey());
     }
-
+        
     /**
      * Ensure the login request is not rate limited.
      *

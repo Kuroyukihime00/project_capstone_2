@@ -10,14 +10,14 @@
           <li class="separator"><i class="icon-arrow-right"></i></li>
           <li class="nav-item">Master</li>
           <li class="separator"><i class="icon-arrow-right"></i></li>
-          <li class="nav-item"><a href="{{ route('lecturer-list') }}">Lecturer</a></li>
+          <li class="nav-item"><a href="{{ route('admin.lecturer.index') }}">Lecturer</a></li>
         </ul>
       </div>
       <div class="row">
         <div class="col-md-12">
           <div class="card">
             <div class="card-body">
-              <form method="post" action="{{ route('lecturer-store') }}">
+              <form method="post" action="{{ route('admin.lecturer.store') }}">
                 @csrf
                 <div class="form-group">
                   <label for="nik">NIK</label>

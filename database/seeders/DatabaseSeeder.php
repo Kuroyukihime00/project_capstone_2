@@ -2,22 +2,54 @@
 
 namespace Database\Seeders;
 
-use App\Models\User;
-// use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
+use App\Models\User;
+use Illuminate\Support\Facades\Hash;
 
 class DatabaseSeeder extends Seeder
 {
-    /**
-     * Seed the application's database.
-     */
     public function run(): void
     {
-        // User::factory(10)->create();
+        $this->call([
+            RoleSeeder::class,
+            LetterTypeSeeder::class,
+            ProgramStudySeeder::class,
+        ]);
 
-        User::factory()->create([
-            'name' => 'Test User',
-            'email' => 'test@example.com',
+        // Admin
+        User::create([
+            'name' => 'Admin User',
+            'email' => 'admin@example.com',
+            'nip' => '1234567',
+            'password' => Hash::make('password'),
+            'role_id' => 1,
+        ]);
+
+        // Mahasiswa
+        User::create([
+            'name' => 'Mahasiswa Satu',
+            'email' => 'mahasiswa@example.com',
+            'nip' => '2200001',
+            'password' => Hash::make('password'),
+            'role_id' => 2,
+        ]);
+
+        // Kaprodi
+        User::create([
+            'name' => 'Kaprodi Satu',
+            'email' => 'kaprodi@example.com',
+            'nip' => '3300001',
+            'password' => Hash::make('password'),
+            'role_id' => 3,
+        ]);
+
+        // Manajer Operasional
+        User::create([
+            'name' => 'Manajer TU',
+            'email' => 'manajer@example.com',
+            'nip' => '4400001',
+            'password' => Hash::make('password'),
+            'role_id' => 4,
         ]);
     }
 }

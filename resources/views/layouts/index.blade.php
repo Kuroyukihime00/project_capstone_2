@@ -151,5 +151,6 @@
 <script src="{{ asset('assets/js/kaiadmin.min.js') }}"></script>
 
 @yield('ExtraJS')
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </body>
 </html>

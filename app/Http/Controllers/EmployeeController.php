@@ -31,15 +31,15 @@ class EmployeeController extends Controller
   public function store(Request $request)
   {
     $validatedData = $request->validate([
-      'nip' => ['required', 'string', 'max:7', Rule::unique('employee', 'nip')],
+      'nip' => ['required', 'string', 'max:7', Rule::unique('users', 'nip')],
       'name' => ['required', 'string', 'max:100'],
-      'email' => ['required', 'email', 'max:100', Rule::unique('employee', 'email')],
+      'email' => ['required', 'email', 'max:100', Rule::unique('users', 'email')],
       'password' => ['required', 'string', 'confirmed'],
     ]);
     $user = new User($validatedData);
     $user->role_id = 2;
     $user->save();
-    return redirect(route('employee-list'))->with('status', 'Employee added successfully');
+    return redirect(route('admin.employee.index'))->with('status', 'Employee added successfully');
   }
 
   /**
@@ -55,7 +55,7 @@ class EmployeeController extends Controller
    */
   public function edit(string $nip)
   {
-    $employee = User::find($nip);
+    $employee = User::where('nip', $nip)->first();
     if ($employee == null) {
       return back()->withErrors(['err_msg' => 'Employee not found']);
     }
@@ -67,19 +67,19 @@ class EmployeeController extends Controller
    */
   public function update(Request $request, string $nip)
   {
-    $employee = User::find($nip);
+    $employee = User::where('nip', $nip)->first();
     if ($employee == null) {
       return back()->withErrors(['err_msg' => 'Employee not found']);
     }
     $validatedData = $request->validate([
-      'nip' => ['required', 'string', 'max:7', Rule::unique('employee', 'nip')->ignore($nip, 'nip')],
+      'nip' => ['required', 'string', 'max:7', Rule::unique('users', 'nip')->ignore($nip, 'nip')],
       'name' => ['required', 'string', 'max:100'],
-      'email' => ['required', 'email', 'max:100', Rule::unique('employee', 'email')->ignore($nip, 'nip')],
+      'email' => ['required', 'email', 'max:100', Rule::unique('users', 'email')->ignore($nip, 'nip')],
     ]);
     $employee->name = $validatedData['name'];
     $employee->email = $validatedData['email'];
     $employee->save();
-    return redirect(route('employee-list'))->with('status', 'Employee updated successfully');
+    return redirect(route('admin.employee.index'))->with('status', 'Employee updated successfully');
   }
 
   /**
@@ -87,13 +87,18 @@ class EmployeeController extends Controller
    */
   public function destroy(string $nip)
   {
-    $employee = User::find($nip);
-    if ($employee == null) {
-      return back()->withErrors(['err_msg' => 'Employee not found']);
-    } else if ($employee->role_id == 1) {
-      return back()->withErrors(['err_msg' => 'Cannot delete admin']);
-    }
-    $employee->delete();
-    return redirect(route('employee-list'))->with('status', 'Employee deleted successfully');
-  }
+      $employee = User::where('nip', $nip)->first();
+  
+      if (!$employee) {
+          return back()->withErrors(['err_msg' => 'Employee not found']);
+      }
+  
+      if ($employee->role->name === 'admin') {
+          return back()->withErrors(['err_msg' => 'Cannot delete admin']);
+      }
+  
+      $employee->delete();
+  
+      return redirect()->route('admin.employee.index')->with('status', 'Employee deleted successfully');
+  }  
 }

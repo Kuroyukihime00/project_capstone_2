@@ -1,36 +1,33 @@
+
 <!DOCTYPE html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
-    <head>
-        <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-        <meta name="csrf-token" content="{{ csrf_token() }}">
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>@yield('title', 'SuratApp')</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
 
-        <title>{{ config('app.name', 'Laravel') }}</title>
+    <!-- KaiAdmin Styles -->
+    <link href="{{ asset('kaiadmin/assets/css/bootstrap.min.css') }}" rel="stylesheet">
+    <link href="{{ asset('kaiadmin/assets/css/style.css') }}" rel="stylesheet">
+    <link href="{{ asset('kaiadmin/assets/css/icons.css') }}" rel="stylesheet">
+</head>
+<body>
 
-        <!-- Fonts -->
-        <link rel="preconnect" href="https://fonts.bunny.net">
-        <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
+    <!-- Sidebar -->
+    @include('layouts.sidebar')
 
-        <!-- Scripts -->
-        @vite(['resources/css/app.css', 'resources/js/app.js'])
-    </head>
-    <body class="font-sans antialiased">
-        <div class="min-h-screen bg-gray-100 dark:bg-gray-900">
-            @include('layouts.navigation')
+    <!-- Header -->
+    @include('layouts.header')
 
-            <!-- Page Heading -->
-            @isset($header)
-                <header class="bg-white dark:bg-gray-800 shadow">
-                    <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
-                        {{ $header }}
-                    </div>
-                </header>
-            @endisset
+    <!-- Main Content -->
+    <main class="main-content p-4">
+        @yield('content')
+    </main>
 
-            <!-- Page Content -->
-            <main>
-                {{ $slot }}
-            </main>
-        </div>
-    </body>
+    <!-- KaiAdmin Scripts -->
+    <script src="{{ asset('kaiadmin/assets/js/jquery.min.js') }}"></script>
+    <script src="{{ asset('kaiadmin/assets/js/bootstrap.bundle.min.js') }}"></script>
+    <script src="{{ asset('kaiadmin/assets/js/script.js') }}"></script>
+    @yield('scripts')
+</body>
 </html>

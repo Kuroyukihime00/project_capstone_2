@@ -38,7 +38,7 @@ class LecturerController extends Controller
     ]);
     $lecturer = new Lecturer($validatedData);
     $lecturer->save();
-    return redirect()->route('lecturer-list')
+    return redirect()->route('admin.lecturer.index')
       ->with('status', 'Lecturer successfully added!');
   }
 
@@ -82,7 +82,7 @@ class LecturerController extends Controller
     $lecturer['birth_date'] = $validatedData['birth_date'];
     $lecturer['email'] = $validatedData['email'];
     $lecturer->save();
-    return redirect()->route('lecturer-list')
+    return redirect()->route('admin.lecturer.index')
       ->with('status', 'Lecturer successfully updated!');
   }
 
@@ -99,7 +99,7 @@ class LecturerController extends Controller
       return back()->withErrors(['err_msg' => 'Delete error. This lecturer has been assigned to supervise student(s)!']);
     }
     $lecturer->delete();
-    return redirect()->route('lecturer-list')
+    return redirect()->route('admin.lecturer.index')
       ->with('status', 'Lecturer successfully deleted!');
   }
 }

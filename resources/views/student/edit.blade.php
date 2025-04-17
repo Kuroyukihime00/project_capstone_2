@@ -13,14 +13,14 @@
           <li class="separator"><i class="icon-arrow-right"></i></li>
           <li class="nav-item">Master</li>
           <li class="separator"><i class="icon-arrow-right"></i></li>
-          <li class="nav-item"><a href="{{ route('student-list') }}">Student</a></li>
+          <li class="nav-item"><a href="{{ route('admin.student.index') }}">Student</a></li>
         </ul>
       </div>
       <div class="row">
         <div class="col-md-12">
           <div class="card">
             <div class="card-body">
-              <form method="post" action="{{ route('student-update', [$student->nrp]) }}" enctype="multipart/form-data">
+              <form method="post" action="{{ route('admin.student.update', [$student->nrp]) }}" enctype="multipart/form-data">
                 @csrf
                 @method('PUT')
                 <div class="form-group">

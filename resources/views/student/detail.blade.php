@@ -10,7 +10,7 @@
           <li class="separator"><i class="icon-arrow-right"></i></li>
           <li class="nav-item">Master</li>
           <li class="separator"><i class="icon-arrow-right"></i></li>
-          <li class="nav-item"><a href="{{ route('student-list') }}">Student</a></li>
+          <li class="nav-item"><a href="{{ route('admin.student.index') }}">Student</a></li>
         </ul>
       </div>
       @error('err_msg')

@@ -10,7 +10,7 @@
           <li class="separator"><i class="icon-arrow-right"></i></li>
           <li class="nav-item">Master</li>
           <li class="separator"><i class="icon-arrow-right"></i></li>
-          <li class="nav-item"><a href="{{ route('student-list') }}">Student</a></li>
+          <li class="nav-item"><a href="{{ route('admin.student.index') }}">Student</a></li>
         </ul>
       </div>
       @if (session('status'))
@@ -25,7 +25,7 @@
             <div class="card-header">
               <div class="d-flex align-items-center">
                 <h4 class="card-title">Add Student</h4>
-                <a href="{{ route('student-create') }}" class="btn btn-primary btn-round ms-auto">
+                <a href="{{ route('admin.student.create') }}" class="btn btn-primary btn-round ms-auto">
                   <i class="fa fa-plus"></i>
                   Add Data
                 </a>
@@ -62,7 +62,7 @@
                               title="Student Detail"
                               class="btn btn-link btn-success detail-data"
                               data-original-title="Student Detail"
-                              data-url="{{ route('student-detail', [$student->nrp]) }}"
+                              data-url="{{ route('admin.student.show', [$student->nrp]) }}"
                           >
                             <i class="fas fa-info-circle"></i>
                           </button>
@@ -71,11 +71,11 @@
                               title="Edit Student"
                               class="btn btn-link btn-primary edit-data"
                               data-original-title="Edit Student"
-                              data-url="{{ route('student-edit', [$student->nrp]) }}"
+                              data-url="{{ route('admin.student.edit', [$student->nrp]) }}"
                           >
                             <i class="fa fa-edit"></i>
                           </button>
-                          <form method="post" action="{{ route('student-delete', [$student->nrp]) }}">
+                          <form method="post" action="{{ route('admin.student.destroy', [$student->nrp]) }}">
                             @csrf
                             @method('DELETE')
                             <button

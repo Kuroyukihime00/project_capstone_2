@@ -33,11 +33,11 @@ class StudentController extends Controller
   public function store(Request $request)
   {
     $validatedData = $request->validate([
-      'nrp' => ['required', 'string', 'max:9', 'unique:student,nrp'],
+      'nrp' => ['required', 'string', 'max:9', 'unique:students,nrp'],
       'name' => ['required', 'string', 'max:100'],
       'birth_date' => ['required'],
       'phone' => ['required', 'numeric'],
-      'email' => ['nullable', 'email', 'max:50', 'unique:student,email'],
+      'email' => ['nullable', 'email', 'max:50', 'unique:students,email'],
       'address' => ['required', 'string', 'max:300'],
       'lecturer_nik' => ['required', 'string'],
       'profile_picture' => ['nullable', 'image', 'mimes:jpeg,png,jpg', 'max:2048'],
@@ -50,7 +50,7 @@ class StudentController extends Controller
       $student['profile_picture'] = $newFileName;
     }
     $student->save();
-    return redirect()->route('student-list')
+    return redirect()->route('admin.student.index')
       ->with('status', 'Student successfully added!');
   }
 
@@ -114,7 +114,7 @@ class StudentController extends Controller
       $student['profile_picture'] = $newFileName;
     }
     $student->save();
-    return redirect()->route('student-list')
+    return redirect()->route('admin.student.index')
       ->with('status', 'Student successfully updated!');
   }
 
@@ -131,7 +131,7 @@ class StudentController extends Controller
       unlink('storage/students_picture/' . $student->profile_picture);
     }
     $student->delete();
-    return redirect()->route('student-list')
+    return redirect()->route('admin.student.index')
       ->with('status', 'Student successfully deleted!');
   }
 }

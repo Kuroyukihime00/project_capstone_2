@@ -10,7 +10,7 @@
           <li class="separator"><i class="icon-arrow-right"></i></li>
           <li class="nav-item">Master</li>
           <li class="separator"><i class="icon-arrow-right"></i></li>
-          <li class="nav-item"><a href="{{ route('lecturer-list') }}">Lecturer</a></li>
+          <li class="nav-item"><a href="{{ route('admin.lecturer.index') }}">Lecturer</a></li>
         </ul>
       </div>
       @if (session('status'))
@@ -25,7 +25,7 @@
             <div class="card-header">
               <div class="d-flex align-items-center">
                 <h4 class="card-title">Add Lecturer</h4>
-                <a href="{{ route('lecturer-create') }}" class="btn btn-primary btn-round ms-auto">
+                <a href="{{ route('admin.lecturer.create') }}" class="btn btn-primary btn-round ms-auto">
                   <i class="fa fa-plus"></i>
                   Add Data
                 </a>
@@ -62,11 +62,11 @@
                               title="Edit Lecturer"
                               class="btn btn-link btn-primary edit-data"
                               data-original-title="Edit Lecturer"
-                              data-url="{{ route('lecturer-edit', [$lecturer->nik]) }}"
+                              data-url="{{ route('admin.lecturer.edit', [$lecturer->nik]) }}"
                           >
                             <i class="fa fa-edit"></i>
                           </button>
-                          <form method="post" action="{{ route('lecturer-delete', [$lecturer->nik]) }}">
+                          <form method="post" action="{{ route('admin.lecturer.destroy', [$lecturer->nik]) }}">
                             @csrf
                             @method('DELETE')
                             <button

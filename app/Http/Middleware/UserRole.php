@@ -9,16 +9,12 @@ use Symfony\Component\HttpFoundation\Response;
 
 class UserRole
 {
-    /**
-     * Handle an incoming request.
-     *
-     * @param  \Closure(\Illuminate\Http\Request): (\Symfony\Component\HttpFoundation\Response)  $next
-     */
-    public function handle(Request $request, Closure $next, ...$roles): Response
+    public function handle($request, Closure $next, $role)
     {
-        if(Auth::user() != null && in_array(Auth::user()->role_id, $roles)) {
-            return $next($request);
+        $userRole = auth()->user()->role->name; // Atau gunakan `role_id` jika lebih aman
+        if ($userRole !== $role) {
+            abort(403, 'Unauthorized');
         }
-        return response(view('unauthorized'));
-    }
+        return $next($request);
+    }    
 }

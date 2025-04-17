@@ -10,14 +10,14 @@
           <li class="separator"><i class="icon-arrow-right"></i></li>
           <li class="nav-item">Master</li>
           <li class="separator"><i class="icon-arrow-right"></i></li>
-          <li class="nav-item"><a href="{{ route('employee-list') }}">Employee</a></li>
+          <li class="nav-item"><a href="{{ route('admin.employee.index') }}">Employee</a></li>
         </ul>
       </div>
       <div class="row">
         <div class="col-md-12">
           <div class="card">
             <div class="card-body">
-              <form method="post" action="{{ route('employee-update', [$employee->nip]) }}">
+              <form method="post" action="{{ route('admin.employee.update', [$employee->nip]) }}">
                 @csrf
                 @method('PUT')
                 <div class="form-group">
