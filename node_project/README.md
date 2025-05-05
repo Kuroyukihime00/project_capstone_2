@@ -4,6 +4,6 @@ This project demonstrates:
 - URL navigation and file access
 ## How to Run
 ```bash
-node app.js
+node app.cjs
 ```
 Then visit http://localhost:3000 in your browser.
