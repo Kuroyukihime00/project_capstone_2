@@ -3,53 +3,61 @@
 namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
-use App\Models\User;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
+use App\Models\User;
 
 class DatabaseSeeder extends Seeder
 {
     public function run(): void
     {
+        // Seed roles
+        DB::table('roles')->insert([
+            ['name' => 'admin'],
+            ['name' => 'member'],
+            ['name' => 'panitia'],
+            ['name' => 'keuangan'],
+        ]);
+
+        // Ambil ID role berdasarkan nama
+        $roles = DB::table('roles')->pluck('id', 'name');
+
+        // Seed users
+        User::insert([
+            [
+                'name' => 'Admin Demo',
+                'email' => 'admin@demo.com',
+                'nip' => '1000001',
+                'password' => Hash::make('password'),
+                'role_id' => $roles['admin'],
+            ],
+            [
+                'name' => 'Member Demo',
+                'email' => 'member@demo.com',
+                'nip' => '1000002',
+                'password' => Hash::make('password'),
+                'role_id' => $roles['member'],
+            ],
+            [
+                'name' => 'Panitia Demo',
+                'email' => 'panitia@demo.com',
+                'nip' => '1000003',
+                'password' => Hash::make('password'),
+                'role_id' => $roles['panitia'],
+            ],
+            [
+                'name' => 'Keuangan Demo',
+                'email' => 'keuangan@demo.com',
+                'nip' => '1000004',
+                'password' => Hash::make('password'),
+                'role_id' => $roles['keuangan'],
+            ],
+        ]);
+
+        // Panggil seeder tambahan
         $this->call([
-            RoleSeeder::class,
-            LetterTypeSeeder::class,
-            ProgramStudySeeder::class,
-        ]);
-
-        // Admin
-        User::create([
-            'name' => 'Admin User',
-            'email' => 'admin@example.com',
-            'nip' => '1234567',
-            'password' => Hash::make('password'),
-            'role_id' => 1,
-        ]);
-
-        // Mahasiswa
-        User::create([
-            'name' => 'Mahasiswa Satu',
-            'email' => 'mahasiswa@example.com',
-            'nip' => '2200001',
-            'password' => Hash::make('password'),
-            'role_id' => 2,
-        ]);
-
-        // Kaprodi
-        User::create([
-            'name' => 'Kaprodi Satu',
-            'email' => 'kaprodi@example.com',
-            'nip' => '3300001',
-            'password' => Hash::make('password'),
-            'role_id' => 3,
-        ]);
-
-        // Manajer Operasional
-        User::create([
-            'name' => 'Manajer TU',
-            'email' => 'manajer@example.com',
-            'nip' => '4400001',
-            'password' => Hash::make('password'),
-            'role_id' => 4,
+            \Database\Seeders\EventSeeder::class,
+            \Database\Seeders\CertificateSeeder::class,
         ]);
     }
 }

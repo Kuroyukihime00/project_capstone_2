@@ -27,29 +27,31 @@ class LoginRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'nip' => ['required', 'string', 'max:7'],
+            'email' => ['required', 'string', 'email'],
             'password' => ['required', 'string'],
         ];
     }
-    
+
+    /**
+     * Attempt to authenticate the request's credentials.
+     *
+     * @throws \Illuminate\Validation\ValidationException
+     */
     public function authenticate(): void
     {
         $this->ensureIsNotRateLimited();
-    
-        // DEBUG: tampilkan input yang dikirim
-        // dd($this->only('nip', 'password'));
-    
-        if (! Auth::attempt($this->only('nip', 'password'), $this->boolean('remember'))) {
+
+        if (! Auth::attempt($this->only('email', 'password'), $this->boolean('remember'))) {
             RateLimiter::hit($this->throttleKey());
-    
+
             throw ValidationException::withMessages([
                 'email' => trans('auth.failed'),
             ]);
         }
-    
+
         RateLimiter::clear($this->throttleKey());
     }
-        
+
     /**
      * Ensure the login request is not rate limited.
      *

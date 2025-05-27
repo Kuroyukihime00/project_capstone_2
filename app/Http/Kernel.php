@@ -56,6 +56,6 @@ class Kernel extends HttpKernel
         'verified' => \Illuminate\Auth\Middleware\EnsureEmailIsVerified::class,
 
         // Tambahkan custom middleware kamu di sini
-        'role' => \App\Http\Middleware\UserRole::class,
+        'role' => \App\Http\Middleware\RoleMiddleware::class,
     ];
 }
