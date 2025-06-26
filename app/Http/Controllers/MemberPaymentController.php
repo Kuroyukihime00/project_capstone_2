@@ -4,31 +4,42 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\EventRegistration;
-use App\Models\Payment;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
 
 class MemberPaymentController extends Controller
 {
-    public function create(EventRegistration $registration)
+    // Menampilkan form upload bukti pembayaran untuk event yang telah didaftarkan
+    public function create()
     {
-        return view('memberpayment.create', compact('registration'));
+        $registrations = EventRegistration::with('event')
+            ->where('user_id', Auth::id())
+            ->whereNull('payment_proof_path') // hanya yang belum upload
+            ->get();
+
+        return view('member.payments.upload', compact('registrations'));
     }
 
-    public function store(Request $request, EventRegistration $registration)
+    // Menyimpan bukti pembayaran
+    public function store(Request $request)
     {
         $validated = $request->validate([
-            'proof' => 'required|image|max:2048',
+            'event_registration_id' => 'required|exists:event_registrations,id',
+            'payment_proof' => 'required|file|mimes:jpg,jpeg,png,pdf|max:2048',
         ]);
 
-        $path = $request->file('proof')->store('payment_proofs', 'public');
+        $registration = EventRegistration::where('id', $validated['event_registration_id'])
+            ->where('user_id', Auth::id())
+            ->firstOrFail();
 
-        Payment::create([
-            'event_registration_id' => $registration->id,
-            'proof_path' => $path,
-            'status' => 'waiting',
+        $path = $request->file('payment_proof')->store('payment_proofs', 'public');
+
+        $registration->update([
+            'payment_proof_path' => $path,
+            'payment_status' => 'proses',
         ]);
 
-        $registration->update(['status' => 'paid']);
-
-        return redirect()->route('member.dashboard')->with('success', 'Bukti pembayaran berhasil diunggah.');
+        return redirect()->route('member.payments.create')
+            ->with('success', 'Bukti pembayaran berhasil diunggah dan sedang diproses.');
     }
 }

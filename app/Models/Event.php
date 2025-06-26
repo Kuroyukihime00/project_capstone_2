@@ -14,4 +14,10 @@ class Event extends Model
     {
         return $this->hasMany(EventRegistration::class);
     }
+
+    public function sessions()
+    {
+        return $this->hasMany(\App\Models\EventSession::class);
+        return $this->hasMany(Session::class);
+    }
 }

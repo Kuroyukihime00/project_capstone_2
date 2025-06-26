@@ -9,13 +9,13 @@ class MemberCertificateController extends Controller
 {
     public function show()
     {
-        $certificates = Certificate::with('event')
+        $certificates = Certificate::with(['registration.event'])
             ->whereHas('registration', function ($query) {
                 $query->where('user_id', auth()->id());
             })
             ->get();
 
-        return view('certificates.show', compact('certificates'));
+        return view('member.certificates.index', compact('certificates'));
     }
 
     public function download($registrationId)

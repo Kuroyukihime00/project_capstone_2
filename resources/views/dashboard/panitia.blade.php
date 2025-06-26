@@ -9,17 +9,18 @@
       use App\Models\Event;
       use App\Models\EventRegistration;
       use App\Models\Attendance;
-      use App\Models\Certificate;
 
-      $events = Event::latest()->get();
+      $events = Event::with('sessions')->latest()->get();
     @endphp
 
     <div class="row">
       @foreach($events as $event)
         @php
-          $terdaftar = EventRegistration::where('event_id', $event->id)->count();
-          $registrationIds = EventRegistration::where('event_id', $event->id)->pluck('id');
-          $hadir = \App\Models\Attendance::whereIn('event_registration_id', $registrationIds)->count();
+          $registrations = EventRegistration::with('session')
+              ->where('event_id', $event->id)->get();
+
+          $terdaftar = $registrations->count();
+          $hadir = Attendance::whereIn('event_registration_id', $registrations->pluck('id'))->count();
         @endphp
 
         <div class="col-md-6 mb-4">
@@ -30,19 +31,17 @@
               <p class="mb-1"><strong>Peserta Terdaftar:</strong> {{ $terdaftar }}</p>
               <p class="mb-2"><strong>Peserta Hadir:</strong> {{ $hadir }}</p>
 
-              @php
-                $belumUpload = \App\Models\Attendance::whereIn('event_registration_id', $registrationIds)
-                    ->whereNull('file_path')
-                    ->exists();
-              @endphp
-
-              @if($belumUpload)
-                <a href="{{ route('panitia.certificate.create', ['registration' => $event->id]) }}" class="btn btn-sm btn-primary">
-                  <i class="fa fa-upload"></i> Upload Sertifikat
-                </a>
-              @else
-                <span class="badge bg-success">Sertifikat Lengkap</span>
-              @endif
+              <ul class="list-group list-group-flush">
+                @foreach($registrations as $reg)
+                  <li class="list-group-item">
+                    {{ $reg->user->name }} -
+                    Sesi: {{ $reg->session->title ?? 'Tidak memilih' }} <br>
+                    <a href="{{ route('panitia.scan', $reg->id) }}" class="btn btn-sm btn-success mt-1">
+                      Scan QR
+                    </a>
+                  </li>
+                @endforeach
+              </ul>
             </div>
           </div>
         </div>

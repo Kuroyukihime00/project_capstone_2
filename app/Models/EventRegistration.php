@@ -32,4 +32,15 @@ class EventRegistration extends Model
     {
         return $this->hasOne(Payment::class);
     }
+
+    public function session()
+    {
+        return $this->belongsTo(\App\Models\EventSession::class);
+    }
+
+    public function sessions()
+    {
+        return $this->belongsToMany(EventSession::class, 'event_registration_session')
+            ->withPivot('attended'); // untuk tanda kehadiran tiap sesi
+    }
 }

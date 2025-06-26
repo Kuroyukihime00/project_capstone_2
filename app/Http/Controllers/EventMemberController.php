@@ -17,14 +17,38 @@ class EventMemberController extends Controller
 
     public function register(Event $event)
     {
-        $registration = EventRegistration::firstOrCreate([
-            'user_id' => auth()->id(),
-            'event_id' => $event->id,
-        ], ['status' => 'pending']);
+        // Load sessions dari event
+        $event->load('sessions');
 
-        $qr = QrCode::format('png')->size(250)->generate($registration->id);
-        $qrData = 'data:image/png;base64,' . base64_encode($qr);
+        // Cek apakah user sudah terdaftar di event ini
+        $existing = EventRegistration::where('user_id', auth()->id())
+            ->where('event_id', $event->id)
+            ->first();
 
-        return view('events.register', compact('event', 'qrData'))->with('qr', $qrData);
+        $qrData = null;
+
+        if ($existing) {
+            // Buat QR code jika sudah terdaftar
+            $qr = QrCode::format('png')->size(250)->generate($existing->id);
+            $qrData = 'data:image/png;base64,' . base64_encode($qr);
+        }
+
+        return view('member.events.register', compact('event', 'existing', 'qrData'));
+    }
+
+    public function store(Request $request, Event $event)
+    {
+        $request->validate([
+            'session_id' => 'required|exists:event_sessions,id',
+        ]);
+
+        $registration = new \App\Models\EventRegistration();
+        $registration->user_id = auth()->id();
+        $registration->event_id = $event->id;
+        $registration->session_id = $request->session_id;
+        $registration->status = 'waiting';
+        $registration->save();
+
+        return redirect()->route('member.dashboard')->with('success', 'Registrasi berhasil.');
     }
 }

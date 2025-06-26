@@ -19,6 +19,7 @@ return new class extends Migration {
             $table->date('registration_start')->nullable();
             $table->date('registration_end')->nullable();
             $table->timestamps();
+            $table->enum('certificate_requirement', ['all', 'any'])->default('all');
         });
     }
 
